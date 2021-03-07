@@ -9,7 +9,11 @@ body {
 }
 
 .wrapper {
-  @apply px-6 w-full max-w-screen-md mx-auto;
+  @apply px-6 w-full mx-auto;
+
+  max-width: 840px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .baller-display {

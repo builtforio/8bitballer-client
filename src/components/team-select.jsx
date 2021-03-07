@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactTooltip from 'react-tooltip';
 
 const TeamSelect = ({ teams, selectedTeam, onSelectTeam }) => {
   return (
@@ -6,11 +7,14 @@ const TeamSelect = ({ teams, selectedTeam, onSelectTeam }) => {
       {
         teams.map(team => {
           let selected = selectedTeam.id === team.id;
+          let id = `city_tooltip_${team.city}`;
           
           return (
             <li
+              data-tip
+              data-for={id}
               key={team.city}
-              className="h-10 w-10 mr-2 mb-2 cursor-pointer relative shadow"
+              className="inline-block h-10 w-10 mx-1 mb-2 cursor-pointer relative shadow"
               style={{ backgroundColor: team.colors.secondary }}
               role="button"
               onClick={() => onSelectTeam(team)}
@@ -20,7 +24,9 @@ const TeamSelect = ({ teams, selectedTeam, onSelectTeam }) => {
                 style={{ backgroundColor: team.colors.primary }}
               >
               </div>
-
+              <ReactTooltip id={id}>
+                {team.city}
+              </ReactTooltip>
               {!selected && (<div className="absolute inset-0 bg-white opacity-25 hover:opacity-0"></div>)}
             </li>
           );

@@ -12,7 +12,7 @@ const App = () => {
     <section>
       <WalletConnect />
 
-      <section className="wrapper py-16">
+      <section className="wrapper py-12">
         <Header />
         <HireBallerForm
           selectedTeam={selectedTeam}

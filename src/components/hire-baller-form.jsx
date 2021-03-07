@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { AuctionContract, FactoryContract } from '../utils/contracts';
 import { MetaMaskContext } from '../contexts/meta-mask';
+import Icon from './icon';
+import { AuctionContract, FactoryContract } from '../utils/contracts';
 
 const BASE_COST = 100000000000000000;
 
@@ -15,10 +16,12 @@ const HireBallerForm = ({ selectedTeam }) => {
 
   let teamInfo = [
     {
+      
       term: 'Baller Team:',
       definition: selectedTeam.city,
     },
     {
+      isLoading,
       term: 'Ballers Created:',
       definition: totalMinted,
     }
@@ -45,29 +48,38 @@ const HireBallerForm = ({ selectedTeam }) => {
       callContract(currentAccount);
     }
   }, [currentAccount, selectedTeam]);
-  console.log(totalMinted);
+
   return (
-    <div className="flex items-center py-16">
-      <div className="w-3/5">
+    <div className="sm:flex items-center py-10 sm:py-16">
+      <div className="sm:w-7/12">
         <img
           src={selectedTeam.image}
           alt=""
         />
       </div>
       
-      <div className="w-2/5 ml-16 p-6 shadow rounded">
+      <div className="sm:w-5/12 sm:ml-8 mt-8 sm:mt-0 p-6 shadow rounded">
         <dl className="mb-4">
           {
-            teamInfo.map(({term, definition}, index) => (
+            teamInfo.map((info, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between mb-2 last:mb-0"
               >
                 <dt className="text-sm font-bold">
-                  {term}
+                  {info.term}
                 </dt>
                 <dd className="text-xs">
-                  {definition}
+                  {
+                    info.isLoading
+                      ? (
+                          <Icon
+                            iconKey="basketball"
+                            className="h-3 w-3 animate-spin"
+                          />
+                        )
+                      : info.definition
+                  }
                 </dd>
               </div>    
             ))
