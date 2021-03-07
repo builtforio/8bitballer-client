@@ -15,3 +15,11 @@ body {
     top: 50%;
     margin-top: -194px;
 }
+
+@media (max-width: 576px) {
+    
+    .coming-soon-details {
+        margin-top: -218px;
+    }
+
+}
