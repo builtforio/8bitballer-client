@@ -45,7 +45,7 @@ const HireBallerForm = ({ selectedTeam }) => {
       callContract(currentAccount);
     }
   }, [currentAccount, selectedTeam]);
-  
+  console.log(totalMinted);
   return (
     <div className="flex items-center py-16">
       <div className="w-3/5">
@@ -75,7 +75,7 @@ const HireBallerForm = ({ selectedTeam }) => {
         </dl>
 
         <p className="py-6 text-center text-3xl font-bold border-t-2 border-b-2 mb-5">
-          {(totalMinted + 1) * 0.1} E
+          {((totalMinted + 1) * 0.1).toPrecision(1)} E
         </p>
 
         <button
