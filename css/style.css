@@ -13,13 +13,13 @@ body {
 .coming-soon-details {
     position: absolute;
     top: 50%;
-    margin-top: -194px;
+    margin-top: -215px;
 }
 
 @media (max-width: 576px) {
     
     .coming-soon-details {
-        margin-top: -218px;
+        margin-top: -250px;
     }
 
 }
