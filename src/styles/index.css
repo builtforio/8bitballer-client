@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+body {
+  @apply text-gray-800;
+}
+
+.wrapper {
+  @apply px-6 w-full max-w-screen-md mx-auto;
+}
+
+.baller-display {
+  position: relative;
+}
+
+.baller-display .baller {
+  height: 300px;
+  margin: 0 auto;
+  z-index: 10;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+}
