@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="486px" height="389px" viewBox="0 0 486 389" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>8bitballer-card-cleveland</title>
+    <title>cleveland</title>
     <defs>
         <filter x="-4.5%" y="-3.1%" width="109.3%" height="106.3%" filterUnits="objectBoundingBox" id="filter-1">
             <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
@@ -12,7 +12,7 @@
             </feMerge>
         </filter>
     </defs>
-    <g id="8bitballer-card-cleveland" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="cleveland" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Baller">
             <g id="8bitballer-court" transform="translate(0.000000, 73.000000)">
                 <g id="Court">
@@ -3452,5 +3452,11 @@
                 </g>
             </g>
         </g>
+        <text id="CLE" font-family="SFMono-Heavy, SF Mono" font-size="16" font-weight="600" fill="#FFFFFF">
+            <tspan x="440.664062" y="216">CLE</tspan>
+        </text>
+        <text id="CLE" font-family="SFMono-Heavy, SF Mono" font-size="16" font-weight="600" fill="#FFFFFF">
+            <tspan x="15.6640625" y="216">CLE</tspan>
+        </text>
     </g>
 </svg>
