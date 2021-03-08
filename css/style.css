@@ -16,6 +16,10 @@ body {
     margin-top: -215px;
 }
 
+.coming-soon-details strong {
+    text-decoration: underline;
+}
+
 @media (max-width: 576px) {
     
     .coming-soon-details {
