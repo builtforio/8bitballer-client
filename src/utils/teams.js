@@ -274,7 +274,7 @@ const TEAMS = [
     },
   },
   {
-    id: 28,
+    id: 27,
     city: 'Toronto',
     image: TorontoImage,
     colors: {
@@ -283,7 +283,7 @@ const TEAMS = [
     },
   },
   {
-    id: 29,
+    id: 28,
     city: 'Utah',
     image: UtahImage,
     colors: {
@@ -292,7 +292,7 @@ const TEAMS = [
     },
   },
   {
-    id: 30,
+    id: 29,
     city: 'Washington',
     image: WashingtonImage,
     colors: {

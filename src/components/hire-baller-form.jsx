@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useToasts } from 'react-toast-notifications';
 import { MetaMaskContext } from '../contexts/meta-mask';
 import Icon from './icon';
 import { AuctionContract, FactoryContract } from '../utils/contracts';
@@ -9,6 +10,8 @@ const auctionContract = new AuctionContract();
 const factoryContract = new FactoryContract();
 
 const HireBallerForm = ({ selectedTeam }) => {
+  let { addToast } = useToasts();
+  let [activeTrx, setActiveTrx] = useState(false);
   let [isLoading, setIsLoading] = useState(true);
   let [totalMinted, setTotalMinted] = useState(0);
   let { accounts } = useContext(MetaMaskContext);
@@ -95,8 +98,10 @@ const HireBallerForm = ({ selectedTeam }) => {
           className="w-full text-center cursor-pointer hover:bg-gray-100 rounded text-lg font-bold p-1"
           disabled={isLoading}
           onClick={async () => {
+            setActiveTrx(true);
+            
             try {
-              await auctionContract.call({
+              let result = await auctionContract.call({
                 method: 'send',
                 func: 'buyBaller',
                 args: [currentAccount, selectedTeam.id],
@@ -105,12 +110,34 @@ const HireBallerForm = ({ selectedTeam }) => {
                   value: BASE_COST * (totalMinted + 1),
                 },
               });
+              
+              addToast(
+                (
+                  <p>
+                    <span className="block mb-1">
+                      <strong>Nice!</strong> You just bought a Baller.
+                    </span>
+                    
+                    <a
+                      href={`https://rinkeby.etherscan.io/tx/${result.transactionHash}`}
+                      className="underline text-sm"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View on Etherscan 
+                    </a>
+                  </p>
+                ),
+                { appearance: 'success'},
+              );
             } catch(e) {
-              console.log(e);
+              addToast((<h1>FAILURE</h1>), { appearance: 'error'});
+            } finally {
+              setActiveTrx(false);
             }
           }}
         >
-          Buy This Baller
+          {activeTrx ? "Buying" : "Buy This Baller"}
         </button>
       </div>
     </div>
