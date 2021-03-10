@@ -4,14 +4,30 @@ import { MetaMaskContext } from '../contexts/meta-mask';
 import Icon from './icon';
 import { AuctionContract, FactoryContract } from '../utils/contracts';
 
+const TRX_ERROR_CODE_MAP = {
+  4001: 'You canceled the transaction.',
+};
+
 const BASE_COST = 100000000000000000;
 
 const auctionContract = new AuctionContract();
 const factoryContract = new FactoryContract();
 
-const HireBallerForm = ({ selectedTeam }) => {
+async function getBallersInCirculation(teamId) {
+  let response = await factoryContract.call({
+    func: 'getBallersInCirculation',
+    args: [teamId],
+  });
+
+  return parseInt(response);
+}
+
+const HireBallerForm = ({
+  selectedTeam,
+  hasActiveTrx,
+  onSetHasActiveTrx,
+}) => {
   let { addToast } = useToasts();
-  let [activeTrx, setActiveTrx] = useState(false);
   let [isLoading, setIsLoading] = useState(true);
   let [totalMinted, setTotalMinted] = useState(0);
   let { accounts } = useContext(MetaMaskContext);
@@ -32,12 +48,14 @@ const HireBallerForm = ({ selectedTeam }) => {
 
   useEffect(() => {
     async function callContract() {
+      if (!currentAccount || hasActiveTrx) {
+        return;
+      }
+      
+      setIsLoading(true);
+
       try {
-        let response = await factoryContract.call({
-          func: 'getBallersInCirculation',
-          args: [selectedTeam.id],
-        });
-        setTotalMinted(parseInt(response));
+        setTotalMinted(await getBallersInCirculation(selectedTeam.id));
       } catch (e) {
         console.log(e);
       } finally {
@@ -45,12 +63,8 @@ const HireBallerForm = ({ selectedTeam }) => {
       }
     }
     
-    setIsLoading(true);
-    
-    if (currentAccount) {
-      callContract(currentAccount);
-    }
-  }, [currentAccount, selectedTeam]);
+    callContract(currentAccount);
+  }, [currentAccount, selectedTeam, hasActiveTrx]);
 
   return (
     <div className="sm:flex items-center py-10 sm:py-16">
@@ -89,16 +103,26 @@ const HireBallerForm = ({ selectedTeam }) => {
           }
         </dl>
 
-        <p className="py-6 text-center text-3xl font-bold border-t-2 border-b-2 mb-5">
-          {((totalMinted + 1) * 0.1).toPrecision(1)} Ξ
+        <p className="flex items-center justify-center py-6 text-3xl font-bold border-t-2 border-b-2 mb-5">
+          {
+            isLoading
+              ? (
+                  <Icon
+                    iconKey="basketball"
+                    className="h-8 w-8 animate-spin"
+                  />
+                )
+              : (<span>{((totalMinted + 1) * 0.1).toPrecision(1)}</span>)
+          }
+          <span className="ml-2">Ξ</span>
         </p>
 
         <button
           type="button"
-          className="w-full text-center cursor-pointer hover:bg-gray-100 rounded text-lg font-bold p-1"
-          disabled={isLoading}
+          className="w-full text-center cursor-pointer hover:bg-gray-100 rounded font-bold px-1 py-2"
+          disabled={isLoading || hasActiveTrx}
           onClick={async () => {
-            setActiveTrx(true);
+            onSetHasActiveTrx(true);
             
             try {
               let result = await auctionContract.call({
@@ -131,13 +155,33 @@ const HireBallerForm = ({ selectedTeam }) => {
                 { appearance: 'success'},
               );
             } catch(e) {
-              addToast((<h1>FAILURE</h1>), { appearance: 'error'});
+              addToast(
+                (
+                  <p>
+                    <span className="block mb-1">
+                      <strong>Bummer!</strong> {TRX_ERROR_CODE_MAP[e.code] ?? 'Something went wrong.'}
+                    </span>
+                  </p>
+                ),
+                { appearance: 'error'},
+              );
             } finally {
-              setActiveTrx(false);
+              onSetHasActiveTrx(false);
             }
           }}
         >
-          {activeTrx ? "Buying" : "Buy This Baller"}
+          {hasActiveTrx
+            ? (
+                <div className="flex items-center justify-center">
+                  <Icon
+                    iconKey="basketball"
+                    className="h-6 w-6 mr-3 animate-spin"
+                  /> 
+                  <span>Negotiating contract…</span>
+                </div>
+              ) 
+            : "Buy This Baller"
+          }
         </button>
       </div>
     </div>

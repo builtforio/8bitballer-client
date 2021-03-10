@@ -3,25 +3,24 @@ import Header from './header';
 import HireBallerForm from './hire-baller-form';
 import TeamSelect from './team-select';
 import TEAMS from '../utils/teams';
-
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+import { getRandomIntInclusive } from '../utils/math';
 
 const App = () => {
   let [selectedTeam, setSelectedTeam] = useState(TEAMS[getRandomIntInclusive(0, 29)]);
+  let [hasActiveTrx, setHasActiveTrx] = useState(false);
   
   return (
     <section className="wrapper pt-12 pb-24">
       <Header />
       <HireBallerForm
         selectedTeam={selectedTeam}
+        hasActiveTrx={hasActiveTrx}
+        onSetHasActiveTrx={(val) => setHasActiveTrx(val)}
       />
       <TeamSelect
         teams={TEAMS}
         selectedTeam={selectedTeam}
+        disabled={hasActiveTrx}
         onSelectTeam={setSelectedTeam}
       />
     </section>
