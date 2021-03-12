@@ -23,14 +23,16 @@ const Header = () => {
   return (
     <header className="grid grid-cols-3 gap-4">
       <div className="col-start-2 text-center">
-        <img
-          className="h-16 w-16 mx-auto mb-2"
-          src={ball}
-          alt="baller"
-        />
-        <h1 className="font-bold text-2xl">
-          Baller
-        </h1>
+        <a href="/">
+          <img
+            className="h-16 w-16 mx-auto mb-2"
+            src={ball}
+            alt="baller"
+          />
+          <h1 className="font-bold text-2xl">
+            Baller
+          </h1>
+        </a>
       </div>
       <div className="text-right">
         <button
