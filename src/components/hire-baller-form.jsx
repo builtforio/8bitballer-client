@@ -42,7 +42,7 @@ const HireBallerForm = ({
     {
       isLoading,
       term: 'Ballers Created:',
-      definition: totalMinted,
+      definition: totalMinted + " / 100",
     }
   ];
 
@@ -114,7 +114,7 @@ const HireBallerForm = ({
                 )
               : (<span>{((totalMinted + 1) * 0.1).toPrecision(1)}</span>)
           }
-          <span className="ml-2">Ξ</span>
+          <span className="ml-2">ETH</span>
         </p>
 
         <button
@@ -177,7 +177,7 @@ const HireBallerForm = ({
                     iconKey="basketball"
                     className="h-6 w-6 mr-3 animate-spin"
                   /> 
-                  <span>Negotiating contract…</span>
+                  <span>Requesting Baller…</span>
                 </div>
               ) 
             : "Buy This Baller"
