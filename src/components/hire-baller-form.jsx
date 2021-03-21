@@ -3,6 +3,7 @@ import { useToasts } from 'react-toast-notifications';
 import { MetaMaskContext } from '../contexts/meta-mask';
 import Icon from './icon';
 import { AuctionContract, FactoryContract } from '../utils/contracts';
+import pinataSDK from "@pinata/sdk";
 
 const TRX_ERROR_CODE_MAP = {
   4001: 'You canceled the transaction.',
@@ -122,13 +123,32 @@ const HireBallerForm = ({
           className="w-full text-center cursor-pointer hover:bg-gray-100 rounded font-bold px-1 py-2"
           disabled={isLoading || hasActiveTrx}
           onClick={async () => {
+            const metadata = {
+                name: 'Metadata',
+                keyvalues: {
+                    ballerTeam: {
+                        value: selectedTeam.city,
+                        op: 'eq'
+                    },
+                    ballerNumber: {
+                        value: (totalMinted + 1),
+                        op: 'eq'
+                    }
+                }
+            }
+
             onSetHasActiveTrx(true);
-            
             try {
+              const pinata = new pinataSDK('d70a58fdb43b12a53f81', '3e653776599cd63698f26e10efcb8689db5df16d69faf5f3860632a82e506742');
+              const pin = await pinata.pinList({
+                  status: "pinned",
+                  metadata
+              });
+              const ipfsHash = pin.rows[0].ipfs_pin_hash;
               let result = await auctionContract.call({
                 method: 'send',
                 func: 'buyBaller',
-                args: [currentAccount, selectedTeam.id],
+                args: [currentAccount, selectedTeam.id, ipfsHash],
                 options: {
                   from: currentAccount,
                   value: BASE_COST * (totalMinted + 1),
@@ -155,6 +175,7 @@ const HireBallerForm = ({
                 { appearance: 'success'},
               );
             } catch(e) {
+              console.error(e);
               addToast(
                 (
                   <p>
