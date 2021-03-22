@@ -9,7 +9,7 @@ const TRX_ERROR_CODE_MAP = {
   4001: 'You canceled the transaction.',
 };
 
-const BASE_COST = 100000000000000000;
+const BASE_COST = 10000000000000000;
 
 const auctionContract = new AuctionContract();
 const factoryContract = new FactoryContract();
@@ -31,7 +31,7 @@ const HireBallerForm = ({
   let { addToast } = useToasts();
   let [isLoading, setIsLoading] = useState(true);
   let [totalMinted, setTotalMinted] = useState(0);
-  let { accounts } = useContext(MetaMaskContext);
+  let { accounts, chain } = useContext(MetaMaskContext);
   let [currentAccount] = accounts;
 
   let teamInfo = [
@@ -123,28 +123,29 @@ const HireBallerForm = ({
           className="w-full text-center cursor-pointer hover:bg-gray-100 rounded font-bold px-1 py-2"
           disabled={isLoading || hasActiveTrx}
           onClick={async () => {
-            const metadata = {
-                name: 'Metadata',
-                keyvalues: {
-                    ballerTeam: {
-                        value: selectedTeam.city,
-                        op: 'eq'
-                    },
-                    ballerNumber: {
-                        value: (totalMinted + 1),
-                        op: 'eq'
-                    }
-                }
-            }
+            let metadata = {
+              name: 'Metadata',
+              keyvalues: {
+                ballerTeam: {
+                  value: selectedTeam.city,
+                  op: 'eq',
+                },
+                ballerNumber: {
+                  value: (totalMinted + 1),
+                  op: 'eq',
+                },
+              },
+            };
 
             onSetHasActiveTrx(true);
+            
             try {
-              const pinata = new pinataSDK('d70a58fdb43b12a53f81', '3e653776599cd63698f26e10efcb8689db5df16d69faf5f3860632a82e506742');
-              const pin = await pinata.pinList({
-                  status: "pinned",
-                  metadata
+              let pinata = new pinataSDK('d70a58fdb43b12a53f81', '3e653776599cd63698f26e10efcb8689db5df16d69faf5f3860632a82e506742');
+              let pin = await pinata.pinList({
+                status: 'pinned',
+                metadata,
               });
-              const ipfsHash = pin.rows[0].ipfs_pin_hash;
+              let ipfsHash = pin.rows[0].ipfs_pin_hash;
               let result = await auctionContract.call({
                 method: 'send',
                 func: 'buyBaller',
@@ -161,15 +162,14 @@ const HireBallerForm = ({
                     <span className="block mb-1">
                       <strong>Nice!</strong> You just bought a Baller.
                     </span>
-                    
-                    <a
-                      href={`https://rinkeby.etherscan.io/tx/${result.transactionHash}`}
+                    {chain && <a
+                      href={`https://${chain === 'test' && 'rinkeby.'}etherscan.io/tx/${result.transactionHash}`}
                       className="underline text-sm"
                       target="_blank"
                       rel="noreferrer"
                     >
                       View on Etherscan 
-                    </a>
+                    </a>}
                   </p>
                 ),
                 { appearance: 'success'},
