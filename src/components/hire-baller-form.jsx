@@ -113,7 +113,7 @@ const HireBallerForm = ({
                     className="h-8 w-8 animate-spin"
                   />
                 )
-              : (<span>{((totalMinted + 1) * 0.1).toPrecision(1)}</span>)
+              : (<span>{((totalMinted + 1) * 0.01).toPrecision(1)}</span>)
           }
           <span className="ml-2">ETH</span>
         </p>
@@ -140,7 +140,9 @@ const HireBallerForm = ({
             onSetHasActiveTrx(true);
             
             try {
-              let pinata = new pinataSDK('d70a58fdb43b12a53f81', '3e653776599cd63698f26e10efcb8689db5df16d69faf5f3860632a82e506742');
+              let pinata = new pinataSDK(
+                'd70a58fdb43b12a53f81', '3e653776599cd63698f26e10efcb8689db5df16d69faf5f3860632a82e506742',
+              );
               let pin = await pinata.pinList({
                 status: 'pinned',
                 metadata,
