@@ -543,6 +543,10 @@ img {
   margin-top: 2rem;
 }
 
+.mt-12 {
+  margin-top: 3rem;
+}
+
 .last\:mb-0:last-child {
   margin-bottom: 0px;
 }

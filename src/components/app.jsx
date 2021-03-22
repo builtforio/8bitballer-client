@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Header from './header';
+import Footer from './footer';
 import HireBallerForm from './hire-baller-form';
 import TeamSelect from './team-select';
 import TEAMS from '../utils/teams';
@@ -23,6 +24,7 @@ const App = () => {
         disabled={hasActiveTrx}
         onSelectTeam={setSelectedTeam}
       />
+      <Footer />
     </section>
   );
 }
