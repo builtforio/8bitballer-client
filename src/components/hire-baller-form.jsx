@@ -31,21 +31,119 @@ const HireBallerForm = ({
   let { addToast } = useToasts();
   let [isLoading, setIsLoading] = useState(true);
   let [totalMinted, setTotalMinted] = useState(0);
-  let { accounts, chain } = useContext(MetaMaskContext);
+  let { accounts, chain, metaMaskInstalled } = useContext(MetaMaskContext);
   let [currentAccount] = accounts;
+  let connected = currentAccount && metaMaskInstalled;
 
   let teamInfo = [
     {
-      
+      isLoading: false,
+      requiresConnection: false,
       term: 'Baller Team:',
       definition: selectedTeam.city,
     },
     {
       isLoading,
+      requiresConnection: true,
       term: 'Ballers Created:',
       definition: totalMinted + " / 100",
     }
   ];
+
+  function getButtonContent() {
+    if (!metaMaskInstalled) {
+      return 'Install MetaMask';
+    }
+
+    if (!currentAccount) {
+      return 'Connect your wallet';
+    }
+    
+    if (hasActiveTrx) {
+      return(
+        <div className="flex items-center justify-center">
+          <Icon
+            iconKey="basketball"
+            className="h-6 w-6 mr-3 animate-spin"
+          /> 
+          <span>Requesting Baller…</span>
+        </div>
+      );
+    }
+    
+    return 'Buy This Baller';
+  }
+
+  async function onPurchase() {
+    let metadata = {
+      name: 'Metadata',
+      keyvalues: {
+        ballerTeam: {
+          value: selectedTeam.city,
+          op: 'eq',
+        },
+        ballerNumber: {
+          value: (totalMinted + 1),
+          op: 'eq',
+        },
+      },
+    };
+
+    onSetHasActiveTrx(true);
+    
+    try {
+      let pinata = new pinataSDK(
+        'd70a58fdb43b12a53f81', '3e653776599cd63698f26e10efcb8689db5df16d69faf5f3860632a82e506742',
+      );
+      let pin = await pinata.pinList({
+        status: 'pinned',
+        metadata,
+      });
+      let ipfsHash = pin.rows[0].ipfs_pin_hash;
+      let result = await auctionContract.call({
+        method: 'send',
+        func: 'buyBaller',
+        args: [currentAccount, selectedTeam.id, ipfsHash],
+        options: {
+          from: currentAccount,
+          value: BASE_COST * (totalMinted + 1),
+        },
+      });
+      
+      addToast(
+        (
+          <p>
+            <span className="block mb-1">
+              <strong>Nice!</strong> You just bought a Baller.
+            </span>
+            {chain && <a
+              href={`https://${chain === 'test' && 'rinkeby.'}etherscan.io/tx/${result.transactionHash}`}
+              className="underline text-sm"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View on Etherscan 
+            </a>}
+          </p>
+        ),
+        { appearance: 'success'},
+      );
+    } catch(e) {
+      console.error(e);
+      addToast(
+        (
+          <p>
+            <span className="block mb-1">
+              <strong>Bummer!</strong> {TRX_ERROR_CODE_MAP[e.code] ?? 'Something went wrong.'}
+            </span>
+          </p>
+        ),
+        { appearance: 'error'},
+      );
+    } finally {
+      onSetHasActiveTrx(false);
+    }
+  }
 
   useEffect(() => {
     async function callContract() {
@@ -89,14 +187,20 @@ const HireBallerForm = ({
                 </dt>
                 <dd className="text-xs">
                   {
-                    info.isLoading
-                      ? (
-                          <Icon
-                            iconKey="basketball"
-                            className="h-3 w-3 animate-spin"
-                          />
-                        )
-                      : info.definition
+                    connected || !info.requiresConnection
+                      ?  info.isLoading
+                        ? (
+                            <Icon
+                              iconKey="basketball"
+                              className="h-3 w-3 animate-spin"
+                            />
+                          )
+                        : info.definition
+                      : (
+                        <label className="uppercase text-gray-400">
+                          Disconnected
+                        </label>
+                      )
                   }
                 </dd>
               </div>    
@@ -106,105 +210,25 @@ const HireBallerForm = ({
 
         <p className="flex items-center justify-center py-6 text-3xl font-bold border-t-2 border-b-2 mb-5">
           {
-            isLoading
+            isLoading || !connected
               ? (
                   <Icon
                     iconKey="basketball"
-                    className="h-8 w-8 animate-spin"
+                    className={`h-8 w-8 ${connected && 'animate-spin'}`}
                   />
                 )
               : (<span>{((totalMinted + 1) * 0.01).toPrecision(1)}</span>)
           }
-          <span className="ml-2">ETH</span>
+          {connected && (<span className="ml-2">ETH</span>)}
         </p>
 
         <button
           type="button"
           className="w-full text-center cursor-pointer hover:bg-gray-100 rounded font-bold px-1 py-2"
           disabled={isLoading || hasActiveTrx}
-          onClick={async () => {
-            let metadata = {
-              name: 'Metadata',
-              keyvalues: {
-                ballerTeam: {
-                  value: selectedTeam.city,
-                  op: 'eq',
-                },
-                ballerNumber: {
-                  value: (totalMinted + 1),
-                  op: 'eq',
-                },
-              },
-            };
-
-            onSetHasActiveTrx(true);
-            
-            try {
-              let pinata = new pinataSDK(
-                'd70a58fdb43b12a53f81', '3e653776599cd63698f26e10efcb8689db5df16d69faf5f3860632a82e506742',
-              );
-              let pin = await pinata.pinList({
-                status: 'pinned',
-                metadata,
-              });
-              let ipfsHash = pin.rows[0].ipfs_pin_hash;
-              let result = await auctionContract.call({
-                method: 'send',
-                func: 'buyBaller',
-                args: [currentAccount, selectedTeam.id, ipfsHash],
-                options: {
-                  from: currentAccount,
-                  value: BASE_COST * (totalMinted + 1),
-                },
-              });
-              
-              addToast(
-                (
-                  <p>
-                    <span className="block mb-1">
-                      <strong>Nice!</strong> You just bought a Baller.
-                    </span>
-                    {chain && <a
-                      href={`https://${chain === 'test' && 'rinkeby.'}etherscan.io/tx/${result.transactionHash}`}
-                      className="underline text-sm"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      View on Etherscan 
-                    </a>}
-                  </p>
-                ),
-                { appearance: 'success'},
-              );
-            } catch(e) {
-              console.error(e);
-              addToast(
-                (
-                  <p>
-                    <span className="block mb-1">
-                      <strong>Bummer!</strong> {TRX_ERROR_CODE_MAP[e.code] ?? 'Something went wrong.'}
-                    </span>
-                  </p>
-                ),
-                { appearance: 'error'},
-              );
-            } finally {
-              onSetHasActiveTrx(false);
-            }
-          }}
+          onClick={onPurchase}
         >
-          {hasActiveTrx
-            ? (
-                <div className="flex items-center justify-center">
-                  <Icon
-                    iconKey="basketball"
-                    className="h-6 w-6 mr-3 animate-spin"
-                  /> 
-                  <span>Requesting Baller…</span>
-                </div>
-              ) 
-            : "Buy This Baller"
-          }
+          {getButtonContent()}
         </button>
       </div>
     </div>

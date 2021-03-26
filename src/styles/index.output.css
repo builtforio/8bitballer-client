@@ -645,6 +645,15 @@ img {
   text-align: right;
 }
 
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgba(156, 163, 175, var(--tw-text-opacity));
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
 .underline {
   text-decoration: underline;
 }
