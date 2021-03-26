@@ -31,7 +31,12 @@ const HireBallerForm = ({
   let { addToast } = useToasts();
   let [isLoading, setIsLoading] = useState(true);
   let [totalMinted, setTotalMinted] = useState(0);
-  let { accounts, chain, metaMaskInstalled } = useContext(MetaMaskContext);
+  let {
+    accounts,
+    chain,
+    metaMaskInstalled,
+    connectMetaMask,
+  } = useContext(MetaMaskContext);
   let [currentAccount] = accounts;
   let connected = currentAccount && metaMaskInstalled;
 
@@ -46,7 +51,7 @@ const HireBallerForm = ({
       isLoading,
       requiresConnection: true,
       term: 'Ballers Created:',
-      definition: totalMinted + " / 100",
+      definition: `${totalMinted} / 100`,
     }
   ];
 
@@ -225,8 +230,8 @@ const HireBallerForm = ({
         <button
           type="button"
           className="w-full text-center cursor-pointer hover:bg-gray-100 rounded font-bold px-1 py-2"
-          disabled={isLoading || hasActiveTrx}
-          onClick={onPurchase}
+          disabled={connected && (isLoading || hasActiveTrx)}
+          onClick={connected ? () => onPurchase() : () => connectMetaMask()}
         >
           {getButtonContent()}
         </button>
