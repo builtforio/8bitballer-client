@@ -66,10 +66,6 @@ const HireBallerForm = ({
     if (!currentAccount) {
       return 'Connect your wallet';
     }
-
-    if (soldOut) {
-      return 'Baller sold out!';
-    }
     
     if (hasActiveTrx) {
       return(
@@ -222,16 +218,18 @@ const HireBallerForm = ({
 
         <p className="flex items-center justify-center py-6 text-3xl font-bold border-t-2 border-b-2 mb-5">
           {
-            isLoading || !connected
-              ? (
-                  <Icon
-                    iconKey="basketball"
-                    className={`h-8 w-8 ${connected && 'animate-spin'}`}
-                  />
-                )
-              : (<span>{((totalMinted + 1) * 0.01).toFixed(2)}</span>)
+            soldOut
+              ? 'Sold out!'
+              : isLoading || !connected
+                ? (
+                    <Icon
+                      iconKey="basketball"
+                      className={`h-8 w-8 ${connected && 'animate-spin'}`}
+                    />
+                  )
+                : (<span>{((totalMinted + 1) * 0.01).toFixed(2)}</span>)
           }
-          {connected && (<span className="ml-2">ETH</span>)}
+          {!soldOut && connected && (<span className="ml-2">ETH</span>)}
         </p>
 
         <button
