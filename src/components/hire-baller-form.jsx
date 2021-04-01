@@ -87,7 +87,7 @@ const HireBallerForm = ({
       name: 'Metadata',
       keyvalues: {
         ballerTeam: {
-          value: selectedTeam.city,
+          value: selectedTeam.city.replace("Los Angeles ", "LA"),
           op: 'eq',
         },
         ballerNumber: {
