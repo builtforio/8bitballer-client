@@ -5,6 +5,8 @@ import Icon from './icon';
 import { AuctionContract, FactoryContract } from '../utils/contracts';
 import pinataSDK from "@pinata/sdk";
 
+const MAX_TOTAL_MINTED = 100;
+
 const TRX_ERROR_CODE_MAP = {
   4001: 'You canceled the transaction.',
 };
@@ -39,6 +41,7 @@ const HireBallerForm = ({
   } = useContext(MetaMaskContext);
   let [currentAccount] = accounts;
   let connected = currentAccount && metaMaskInstalled;
+  let soldOut = totalMinted === MAX_TOTAL_MINTED;
 
   let teamInfo = [
     {
@@ -62,6 +65,10 @@ const HireBallerForm = ({
 
     if (!currentAccount) {
       return 'Connect your wallet';
+    }
+
+    if (soldOut) {
+      return 'Baller sold out!';
     }
     
     if (hasActiveTrx) {
@@ -122,7 +129,7 @@ const HireBallerForm = ({
               <strong>Nice!</strong> You just bought a Baller.
             </span>
             {chain && <a
-              href={`https://${chain === 'test' && 'rinkeby.'}etherscan.io/tx/${result.transactionHash}`}
+              href={`https://${chain === 'rinkeby' ? 'rinkeby.' : ''}etherscan.io/tx/${result.transactionHash}`}
               className="underline text-sm"
               target="_blank"
               rel="noreferrer"
@@ -230,7 +237,7 @@ const HireBallerForm = ({
         <button
           type="button"
           className="w-full text-center cursor-pointer hover:bg-gray-100 rounded font-bold px-1 py-2"
-          disabled={connected && (isLoading || hasActiveTrx)}
+          disabled={soldOut || (connected && (isLoading || hasActiveTrx))}
           onClick={connected ? () => onPurchase() : () => connectMetaMask()}
         >
           {getButtonContent()}

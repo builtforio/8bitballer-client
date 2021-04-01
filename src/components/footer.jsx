@@ -8,6 +8,8 @@ const Footer = () => {
         <a
           href="https://www.builtfor.io"
           className="underline"
+          target="_blank"
+          rel="noreferrer"
         >
             builtfor.io
         </a>
