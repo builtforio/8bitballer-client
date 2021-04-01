@@ -229,7 +229,7 @@ const HireBallerForm = ({
                     className={`h-8 w-8 ${connected && 'animate-spin'}`}
                   />
                 )
-              : (<span>{((totalMinted + 1) * 0.01).toPrecision(1)}</span>)
+              : (<span>{((totalMinted + 1) * 0.01).toFixed(2)}</span>)
           }
           {connected && (<span className="ml-2">ETH</span>)}
         </p>
