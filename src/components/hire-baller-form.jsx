@@ -11,7 +11,7 @@ const TRX_ERROR_CODE_MAP = {
   4001: 'You canceled the transaction.',
 };
 
-const BASE_COST = 1000000000;
+const BASE_COST = 10000000000000000;
 
 const auctionContract = new AuctionContract();
 const factoryContract = new FactoryContract();
