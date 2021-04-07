@@ -1,6 +1,6 @@
 const CONTRACTS = {
   factory: {
-    address: '0x6CbD43ee566Bf2CedA77e86875396234B3a598df',
+    address: '0x31cd77Df65aC55e0CB7390eff6bf42848C438676',
     abi: [
         {
           "inputs": [],
@@ -725,7 +725,7 @@ const CONTRACTS = {
     ]
   },
   auction: {
-    address: '0xd5a556532Eb53B6C829Ee17B92921dbC689827E5',
+    address: '0x08B6652aE40c9fA67a67Df6dcF73bF1c1a5B9f90',
     abi: [
         {
           "inputs": [
