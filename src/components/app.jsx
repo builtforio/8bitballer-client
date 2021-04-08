@@ -62,7 +62,7 @@ const App = () => {
         </span>
 
         <p className="text-center mb-6">
-          Collect your favorite team's Baller. The cost of each team's baller will double every time someone picks up their favorite!
+          Collect your favorite team's Baller. The cost of each team's baller will increase by <strong>0.1 ETH</strong> every time someone picks up their favorite!
         </p>
 
         <p className="text-center">
