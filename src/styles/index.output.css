@@ -441,6 +441,10 @@ img {
   display: grid;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
 .flex-wrap {
   flex-wrap: wrap;
 }
@@ -483,6 +487,10 @@ img {
 
 .h-16 {
   height: 4rem;
+}
+
+.h-screen {
+  height: 100vh;
 }
 
 .text-xs {
@@ -539,6 +547,10 @@ img {
   margin-bottom: 1.25rem;
 }
 
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
 .mt-8 {
   margin-top: 2rem;
 }
@@ -549,6 +561,10 @@ img {
 
 .last\:mb-0:last-child {
   margin-bottom: 0px;
+}
+
+.max-w-screen-md {
+  max-width: 768px;
 }
 
 .opacity-25 {
