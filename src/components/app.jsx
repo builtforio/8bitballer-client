@@ -35,7 +35,7 @@ const App = () => {
       remaining.hours(),
       remaining.minutes(),
       remaining.seconds(),
-    ].map(getFormatted).filter(formatted => !!formatted);
+    ].map(getFormatted);
 
     return `${times.join(':')}`
   }
