@@ -31,7 +31,6 @@ const App = () => {
     }
 
     let times = [
-      remaining.days(),
       remaining.hours(),
       remaining.minutes(),
       remaining.seconds(),
