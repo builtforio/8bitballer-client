@@ -10,7 +10,7 @@ import useInterval from '../hooks/use-interval';
 import basketball from '../assets/images/ball.svg';
 
 const READY_TO_RELEASE = false;
-const RELEASE_TIME = 1618070400;
+const RELEASE_TIME = 1618002000;
 
 const App = () => {
   function getTimeRemaining() { 
