@@ -19,10 +19,6 @@ const App = () => {
     let remaining = moment.duration(releaseTime.diff(currentTime));
 
     function getFormatted(int) {
-      if (int === 0) {
-        return;
-      }
-      
       if (int.toString().length === 1) {
         return `0${int}`;
       }
