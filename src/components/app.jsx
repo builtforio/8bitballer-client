@@ -9,7 +9,7 @@ import { getRandomIntInclusive } from '../utils/math';
 import useInterval from '../hooks/use-interval';
 import basketball from '../assets/images/ball.svg';
 
-const READY_TO_RELEASE = false;
+const READY_TO_RELEASE = true;
 const RELEASE_TIME = 1618002000;
 
 const App = () => {
